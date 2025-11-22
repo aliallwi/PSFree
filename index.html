@@ -58,7 +58,8 @@
             <button data-func="load_FTP">FTP</button>
             <button data-func="load_HistoryBlocker">History-Blocker</button>
             <button data-func="load_KernelClock">Kernel-Clock</button>
-            <!--<button data-func="load_Orbis">Orbis-Toolbox</button>-->
+            <!-- تم تفعيل زر Orbis Toolbox مع استدعاء النافذة -->
+            <button data-func="load_Orbis" onclick="showOrbisToolbox()">Orbis-Toolbox</button>
             <button data-func="load_PS4Debug">PS4-Debug</button>
             <button data-func="load_ToDex">ToDex</button>
             <button data-func="load_ToDev">ToDev</button>
@@ -210,6 +211,42 @@
       </div>
       <button onclick="closesettings()" class="close-btn" id="close-settings"></button>
     </div>
+
+    <!-- Orbis Toolbox Popup + Fan Control -->
+    <div class="overlay" id="orbis-overlay" style="display:none;"></div>
+    <div class="popup" id="orbis-popup" style="display:none; width:420px;">
+      <h2>Orbis Toolbox</h2>
+      <div class="section">
+        <h3>Fan Control</h3>
+        <p>Set fan threshold (40 - 79 °C)</p>
+        <input id="fanSlider" type="range" min="40" max="79" value="70"
+               oninput="fanValue.innerText = this.value + '°C'">
+        <p>Current: <span id="fanValue">70°C</span></p>
+        <button class="menu-btn" onclick="applyFanThreshold()">Apply</button>
+      </div>
+      <button onclick="closeOrbisToolbox()" class="close-btn"></button>
+    </div>
+
+    <script>
+      function showOrbisToolbox() {
+        document.getElementById("orbis-popup").style.display = "block";
+        document.getElementById("orbis-overlay").style.display = "block";
+      }
+      function closeOrbisToolbox() {
+        document.getElementById("orbis-popup").style.display = "none";
+        document.getElementById("orbis-overlay").style.display = "none";
+      }
+      function applyFanThreshold() {
+        const value = parseInt(document.getElementById("fanSlider").value);
+        console.log("Fan Threshold:", value);
+        if (typeof load_OrbisFanThreshold === "function") {
+          load_OrbisFanThreshold(value);
+        } else {
+          alert("Fan Threshold payload missing.");
+        }
+      }
+    </script>
+
     <script src='./js/index.js'></script>
   </body>
 </html>
